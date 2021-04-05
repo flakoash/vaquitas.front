@@ -31,10 +31,20 @@ export type Owe = {
   createdAt: number;
 };
 
+export type Transaction = {
+  id: string;
+  title: string;
+  description: string;
+  amount: number;
+  creator: User;
+  createdAt: number;
+  attachment: string;
+};
+
 export type Group = {
   id: string;
   name: string | null;
-  members: [User];
+  members: User[];
   icon: string;
   balance: Owe;
 };
