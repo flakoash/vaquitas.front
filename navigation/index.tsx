@@ -5,11 +5,14 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { ColorSchemeName } from "react-native";
+import { ColorSchemeName, View } from "react-native";
+import Colors from "../constants/Colors";
+import GroupScreen from "../screens/GroupScreen";
+import GroupsListScreen from "../screens/GroupsListScreen";
+import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
-import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
 
 // If you are not familiar with React Navigation, we recommend going through the
@@ -35,12 +38,62 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+    <Stack.Navigator
+      // initialRouteName="MainTab"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors.light.tint,
+        },
+      }}
+    >
+      {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
+
+      <Stack.Screen
+        name="Root"
+        component={GroupsListScreen}
+        options={{
+          title: "Vaquitas App!",
+          headerRight: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                width: 55,
+                justifyContent: "space-between",
+                marginRight: 10,
+              }}
+            >
+              <Octicons name="search" size={22} />
+              <MaterialCommunityIcons name="dots-vertical" size={22} />
+            </View>
+          ),
+        }}
+      />
+
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
+      />
+
+      <Stack.Screen
+        name="Group"
+        component={GroupScreen}
+        options={({ route }) => ({
+          title: route.params !== undefined ? route.params.name : "",
+          headerRight: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                width: 55,
+                justifyContent: "space-between",
+                marginRight: 10,
+              }}
+            >
+              <Octicons name="search" size={22} />
+              <MaterialCommunityIcons name="dots-vertical" size={22} />
+            </View>
+          ),
+        })}
       />
     </Stack.Navigator>
   );

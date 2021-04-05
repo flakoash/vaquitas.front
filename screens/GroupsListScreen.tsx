@@ -8,7 +8,7 @@ import { Group } from "../types";
 const getGroupsData = () => {
   const groups: Group[] = [
     {
-      id: "group_id",
+      id: "1",
       name: "Group 1",
       members: [
         { id: "user_id", name: "User 1", photo: "https://i.pravatar.cc/50" },
@@ -16,7 +16,35 @@ const getGroupsData = () => {
       icon: "https://picsum.photos/50",
       balance: {
         id: "balance_id",
+        value: -100,
+        to: null,
+        createdAt: 1617475021,
+      },
+    },
+    {
+      id: "2",
+      name: "Group 2",
+      members: [
+        { id: "user_id", name: "User 1", photo: "https://i.pravatar.cc/50" },
+      ],
+      icon: "https://picsum.photos/50",
+      balance: {
+        id: "balance_id",
         value: 100,
+        to: null,
+        createdAt: 1617475021,
+      },
+    },
+    {
+      id: "3",
+      name: "Group 3",
+      members: [
+        { id: "user_id", name: "User 1", photo: "https://i.pravatar.cc/50" },
+      ],
+      icon: "https://picsum.photos/50",
+      balance: {
+        id: "balance_id",
+        value: 0,
         to: null,
         createdAt: 1617475021,
       },
