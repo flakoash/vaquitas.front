@@ -21,7 +21,7 @@ export default function App() {
     return null;
   } else {
     if (isStorageUserLoaded && storageUser === null) {
-      const testUser = { id: "1", name: "Current user" };
+      const testUser = { id: "6070b024fc13ae796600005b", name: "Current user" };
       updateStorageUser(JSON.stringify(testUser));
     }
     return (
