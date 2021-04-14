@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Colors from "../../constants/Colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -9,6 +10,7 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flexDirection: "row",
+    width: "52%",
   },
   textContainer: {
     justifyContent: "space-around",
@@ -29,12 +31,13 @@ const styles = StyleSheet.create({
   secondaryText: {
     fontSize: 12,
     fontStyle: "italic",
+    color: "gray",
   },
   greenText: {
-    color: "green",
+    color: Colors.success,
   },
   redText: {
-    color: "red",
+    color: Colors.error,
   },
   amount: {
     fontSize: 18,

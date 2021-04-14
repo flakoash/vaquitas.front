@@ -11,7 +11,7 @@ export type GroupListItemProps = { group: Group };
 
 const GroupListItem = (props: GroupListItemProps) => {
   const { group } = props;
-  const { value } = group.balance;
+  const value = group.balance;
 
   const navigation = useNavigation();
 
@@ -32,10 +32,16 @@ const GroupListItem = (props: GroupListItemProps) => {
     <TouchableWithoutFeedback onPress={handleClick}>
       <View style={styles.container}>
         <View style={styles.leftContainer}>
-          <Image source={{ uri: image }} style={styles.photo} />
+          <Image source={{ uri: image as string }} style={styles.photo} />
 
           <View style={styles.textContainer}>
-            <Text style={styles.groupName}> {group.name} </Text>
+            <Text
+              style={styles.groupName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {group.name}
+            </Text>
             {value !== 0 && <Text style={textStyle}> {mainText} </Text>}
             <Text style={[styles.amount, textStyle]}> {amount} </Text>
           </View>
@@ -45,7 +51,9 @@ const GroupListItem = (props: GroupListItemProps) => {
           <Text style={styles.secondaryText}> Last transaction </Text>
           <Text>
             {
-              moment.unix(group.balance.createdAt).format("DD-MM-YYYY")
+              group.lastTransaction !== 0
+                ? moment.unix(group.lastTransaction / 1000).format("DD-MM-YYYY")
+                : "Never"
               // .humanize()
             }
           </Text>
