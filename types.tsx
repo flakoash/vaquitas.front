@@ -21,14 +21,7 @@ export type TabTwoParamList = {
 export type User = {
   id: string;
   name: string;
-  photo: string;
-};
-
-export type Owe = {
-  id: string;
-  value: number;
-  to: User | null;
-  createdAt: number;
+  photo: string | null;
 };
 
 export type Transaction = {
@@ -36,9 +29,8 @@ export type Transaction = {
   title: string;
   description: string;
   amount: number;
-  creator: User;
+  owner: User;
   createdAt: number;
-  attachment: string;
 };
 
 export type Group = {
@@ -46,5 +38,6 @@ export type Group = {
   name: string | null;
   members: User[];
   icon: string;
-  balance: Owe;
+  balance: number;
+  lastTransaction: number;
 };
