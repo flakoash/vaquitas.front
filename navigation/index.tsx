@@ -52,7 +52,7 @@ function RootNavigator() {
         name="Root"
         component={GroupsListScreen}
         options={{
-          title: "Vaquitas App!",
+          title: "🐮's App!",
           headerRight: () => (
             <View
               style={{
