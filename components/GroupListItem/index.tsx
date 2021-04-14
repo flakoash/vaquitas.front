@@ -17,7 +17,11 @@ const GroupListItem = (props: GroupListItemProps) => {
 
   const handleClick = () => {
     // console.warn("clicked:" + group.name);
-    navigation.navigate("Group", { id: group.id, name: group.name });
+    navigation.navigate("Group", {
+      id: group.id,
+      name: group.name,
+      members: group.members,
+    });
   };
 
   const image = group.icon !== null ? group.icon : group.members[1].photo;

@@ -9,27 +9,22 @@ import groupsData from "../data/groups";
 import useAsyncStorage from "../hooks/useAsyncStorage";
 import { Group, User } from "../types";
 
+const emptySummary = {
+  borrowed: {
+    amount: 0,
+    len: 0,
+  },
+  lent: {
+    amount: 0,
+    len: 0,
+  },
+  settleUp: {
+    amount: 0,
+    len: 0,
+  },
+};
+
 export default function TabOneScreen() {
-  const [groups, setGroups] = useState<Group[]>();
-  const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
-  }, [isUserLoaded]);
-  const [summary, setSummary] = useState({
-    borrowed: {
-      amount: 0,
-      len: 0,
-    },
-    lent: {
-      amount: 0,
-      len: 0,
-    },
-    settleUp: {
-      amount: 0,
-      len: 0,
-    },
-  });
   const getGroupsData = () => {
     if (currentUser !== null)
       fetch("http://192.168.56.1:8080/api/group?userId=" + currentUser.id)
@@ -40,9 +35,19 @@ export default function TabOneScreen() {
         .catch((error) => console.log(error));
   };
 
+  const [groups, setGroups] = useState<Group[]>();
+  const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [summary, setSummary] = useState(emptySummary);
+
+  useEffect(() => {
+    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
+  }, [isUserLoaded]);
+
   useEffect(() => {
     getGroupsData();
-  }, []);
+  }, [currentUser]);
+
   useEffect(() => {
     if (groups !== undefined) setSummary(getSummary(groups));
   }, [groups]);
