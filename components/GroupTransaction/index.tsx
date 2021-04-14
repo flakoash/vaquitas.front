@@ -17,7 +17,7 @@ const GroupTransaction = (props: GroupTransactionProps) => {
     : null;
 
   const currentUserTransaction = () => {
-    return currentUser ? currentUser.id === transaction.creator.id : false;
+    return currentUser ? currentUser.id === transaction.owner.id : false;
   };
   const boxStyle = currentUserTransaction()
     ? styles.currentUserTransaction
@@ -30,7 +30,7 @@ const GroupTransaction = (props: GroupTransactionProps) => {
             {currentUserTransaction() ? (
               <Text> You paid </Text>
             ) : (
-              <Text> {transaction.creator.name} paid </Text>
+              <Text> {transaction.owner.name} paid </Text>
             )}
             <Text style={styles.amount}> {transaction.amount} </Text>
             <Text> for </Text>
@@ -39,7 +39,7 @@ const GroupTransaction = (props: GroupTransactionProps) => {
         <Text style={styles.title}> {transaction.title} </Text>
         <Text> {} </Text>
 
-        <Text> {moment.unix(transaction.createdAt).fromNow()} </Text>
+        <Text> {moment.unix(transaction.createdAt / 1000).fromNow()} </Text>
       </View>
     </View>
   );
