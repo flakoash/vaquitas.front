@@ -8,6 +8,9 @@ import { User } from "../types";
 import Colors from "../constants/Colors";
 import { Animated } from "react-native";
 import AddTransactionButton from "../components/AddTransactionButton";
+import ENV from "../environment";
+
+const { backendApiUrl } = ENV();
 
 const GroupScreen = () => {
   const route = useRoute();
@@ -15,7 +18,7 @@ const GroupScreen = () => {
   const { id, name, members } = route.params;
 
   const getTransactionsData = () => {
-    fetch("http://192.168.56.1:8080/api/transaction?groupId=" + id)
+    fetch(`${backendApiUrl}/transaction?groupId=${id}`)
       .then((response) => response.json())
       .then((responseJson) => {
         setData(responseJson);

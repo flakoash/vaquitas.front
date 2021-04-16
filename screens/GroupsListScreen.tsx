@@ -8,6 +8,9 @@ import Colors from "../constants/Colors";
 import groupsData from "../data/groups";
 import useAsyncStorage from "../hooks/useAsyncStorage";
 import { Group, User } from "../types";
+import ENV from "../environment";
+
+const { backendApiUrl } = ENV();
 
 const emptySummary = {
   borrowed: {
@@ -27,7 +30,7 @@ const emptySummary = {
 export default function TabOneScreen() {
   const getGroupsData = () => {
     if (currentUser !== null)
-      fetch("http://192.168.56.1:8080/api/group?userId=" + currentUser.id)
+      fetch(`${backendApiUrl}/group?userId=${currentUser.id}`)
         .then((response) => response.json())
         .then((responseJson) => {
           setGroups(responseJson);
