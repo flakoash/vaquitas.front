@@ -9,6 +9,7 @@ import groupsData from "../data/groups";
 import useAsyncStorage from "../hooks/useAsyncStorage";
 import { Group, User } from "../types";
 import ENV from "../environment";
+import useFetch from "../hooks/useFetch";
 
 const { backendApiUrl } = ENV();
 
@@ -28,32 +29,24 @@ const emptySummary = {
 };
 
 export default function TabOneScreen() {
-  const getGroupsData = () => {
-    if (currentUser !== null)
-      fetch(`${backendApiUrl}/group?userId=${currentUser.id}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          setGroups(responseJson);
-        })
-        .catch((error) => console.log(error));
-  };
-
-  const [groups, setGroups] = useState<Group[]>();
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({ id: null });
   const [summary, setSummary] = useState(emptySummary);
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
   }, [isUserLoaded]);
 
   useEffect(() => {
-    getGroupsData();
-  }, [currentUser]);
+    if (currentUser.id !== null)
+      setUrl(`${backendApiUrl}/group?userId=${currentUser.id}`);
+  }, [currentUser.id]);
+  const [groupsData, groupsStatus] = useFetch(url);
 
   useEffect(() => {
-    if (groups !== undefined) setSummary(getSummary(groups));
-  }, [groups]);
+    if (groupsData !== null) setSummary(getSummary(groupsData));
+  }, [groupsStatus]);
 
   return (
     <View style={styles.container}>
@@ -63,7 +56,7 @@ export default function TabOneScreen() {
 
       <Animated.FlatList
         style={{ width: "100%" }}
-        data={groups}
+        data={groupsData}
         renderItem={({ item }) => <GroupListItem group={item} />}
         keyExtractor={(item) => item.id}
       />

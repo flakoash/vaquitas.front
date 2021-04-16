@@ -9,24 +9,17 @@ import Colors from "../constants/Colors";
 import { Animated } from "react-native";
 import AddTransactionButton from "../components/AddTransactionButton";
 import ENV from "../environment";
+import useFetch from "../hooks/useFetch";
 
 const { backendApiUrl } = ENV();
 
 const GroupScreen = () => {
   const route = useRoute();
-  const [data, setData] = useState();
   const { id, name, members } = route.params;
 
-  const getTransactionsData = () => {
-    fetch(`${backendApiUrl}/transaction?groupId=${id}`)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setData(responseJson);
-      });
-  };
-  useEffect(() => {
-    getTransactionsData();
-  }, []);
+  const [transactionData, transactionStatus] = useFetch(
+    `${backendApiUrl}/transaction?groupId=${id}`
+  );
 
   const summary = getSummary(id);
 
@@ -40,7 +33,7 @@ const GroupScreen = () => {
         ></TotalBalance>
       </Animated.View>
       <Animated.FlatList
-        data={data}
+        data={transactionData}
         renderItem={({ item }) => <GroupTransaction transaction={item} />}
         contentContainerStyle={{ paddingBottom: 65 }}
       />
