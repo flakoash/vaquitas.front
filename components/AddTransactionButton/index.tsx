@@ -1,7 +1,7 @@
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
-import { View, Text, Pressable, Modal, Alert } from "react-native";
+import { View, Text, Pressable, Modal, Alert, ScrollView } from "react-native";
 import Colors from "../../constants/Colors";
 import { User } from "../../types";
 import styles from "./styles";
@@ -34,8 +34,17 @@ const AddTransactionButton = (props: AddTransaciontButtonProps) => {
             >
               <AntDesign name="closecircle" size={30} color={Colors.error} />
             </Pressable>
-            <Text style={styles.titleText}>Add a new transaction:</Text>
-            <AddTransactionForm members={members} />
+            <ScrollView
+              contentContainerStyle={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ paddingTop: 35, padding: 20 }}>
+                <Text style={styles.titleText}>Add a new transaction:</Text>
+                <AddTransactionForm members={members} />
+              </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>

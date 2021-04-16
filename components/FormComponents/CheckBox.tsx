@@ -1,23 +1,32 @@
 import React from "react";
 import { useController, useFormContext } from "react-hook-form";
-import { CheckBox } from "react-native";
+import { Text, CheckBox, View } from "react-native";
+import styles from "./styles";
 
 export type InputProps = {
   name: string;
   [key: string]: any;
 };
 const CustomCheckBox = (props: InputProps) => {
-  const { name, ...inputTextProps } = props;
+  const { name, rules, defaultValue = "", ...inputTextProps } = props;
   const formContext = useFormContext();
-  const { control } = formContext;
+  const {
+    control,
+    formState: { errors },
+  } = formContext;
 
-  const { field } = useController({ name, control });
+  const { field } = useController({ name, control, rules, defaultValue });
   return (
-    <CheckBox
-      {...inputTextProps}
-      value={field.value}
-      onValueChange={field.onChange}
-    />
+    <View>
+      <CheckBox
+        {...inputTextProps}
+        value={field.value}
+        onValueChange={field.onChange}
+      />
+      {errors[name] && (
+        <Text style={styles.errorText}> {errors[name].message} </Text>
+      )}
+    </View>
   );
 };
 

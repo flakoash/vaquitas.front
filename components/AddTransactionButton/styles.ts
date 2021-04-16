@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     position: "absolute",
-    top: 12,
+    zIndex: 10,
+    top: 10,
     right: 15,
   },
   titleText: {
@@ -40,17 +41,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    margin: 20,
+    margin: 15,
   },
   modalView: {
     position: "absolute",
-    bottom: 60,
+    bottom: 40,
     width: "100%",
-    height: "70%",
+    height: 400,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
+    padding: 10,
+    // alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -93,6 +94,16 @@ const styles = StyleSheet.create({
   },
   groupMemberText: {
     width: 100,
+  },
+  sendButton: {
+    backgroundColor: Colors.success,
+    width: 70,
+    height: 65,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 20,
   },
 });
 
