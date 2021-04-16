@@ -19,13 +19,13 @@ export type TabTwoParamList = {
 };
 
 export type User = {
-  id: string;
+  id: number;
   name: string;
   photo: string | null;
 };
 
 export type Transaction = {
-  id: string;
+  id: number;
   title: string;
   description: string;
   amount: number;
@@ -34,7 +34,7 @@ export type Transaction = {
 };
 
 export type Group = {
-  id: string;
+  id: number;
   name: string | null;
   members: User[];
   icon: string;

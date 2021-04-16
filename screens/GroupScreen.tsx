@@ -33,16 +33,18 @@ const GroupScreen = () => {
         ></TotalBalance>
       </Animated.View>
       <Animated.FlatList
+        style={{ width: "100%" }}
         data={transactionData}
         renderItem={({ item }) => <GroupTransaction transaction={item} />}
         contentContainerStyle={{ paddingBottom: 65 }}
+        keyExtractor={(item) => item.id.toString()}
       />
       <AddTransactionButton members={members} />
     </View>
   );
 };
 
-const getSummary = (group_id: string) => {
+const getSummary = (group_id: number) => {
   return {
     borrowed: {
       amount: -10,

@@ -46,7 +46,7 @@ export default function TabOneScreen() {
 
   useEffect(() => {
     if (groupsData !== null) setSummary(getSummary(groupsData));
-  }, [groupsStatus]);
+  }, [groupsData]);
 
   return (
     <View style={styles.container}>
@@ -58,7 +58,7 @@ export default function TabOneScreen() {
         style={{ width: "100%" }}
         data={groupsData}
         renderItem={({ item }) => <GroupListItem group={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );

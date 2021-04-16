@@ -28,11 +28,11 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
 
   const split = (member: User) => {
     return (
-      <View style={styles.memberContainer} key={member.id}>
+      <View style={styles.memberContainer} key={member.id.toString()}>
         <Image source={{ uri: member.photo as string }} style={styles.avatar} />
         <Text style={styles.groupMemberText}> {member.name}</Text>
         <Input
-          name={member.id}
+          name={member.id.toString()}
           style={styles.splitTextInput}
           keyboardType="numeric"
           placeholder="Amount"
@@ -65,7 +65,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   // unregister member's amount
   useEffect(() => {
     if (splitEqual) {
-      members.forEach((member) => formMethods.unregister(member.id));
+      members.forEach((member) => formMethods.unregister(member.id.toString()));
     }
   }, [splitEqual]);
 
