@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {
-  FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { Image, Pressable, Text, View } from "react-native";
 import { User } from "../../types";
 import Input from "../FormComponents/Input";
 import styles from "./styles";
 import CustomCheckBox from "../FormComponents/CheckBox";
 import { AntDesign } from "@expo/vector-icons";
+import useAsyncStorage from "../../hooks/useAsyncStorage";
+import ENV from "../../environment";
+
+const { backendApiUrl } = ENV();
 
 export type AddTransaciontFormProps = {
   members: User[];
+  groupId: number;
 };
 
 const AddTransactionForm = (props: AddTransaciontFormProps) => {
-  const { members } = props;
+  const { members, groupId } = props;
+  const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
+  const [currentUser, setCurrentUser] = useState({ id: null });
+  useEffect(() => {
+    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
+  }, [isUserLoaded]);
+
+  const [success, setSuccess] = useState(false);
+  const [canSend, setCanSend] = useState(true);
+
   const formMethods = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -32,7 +41,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
         <Image source={{ uri: member.photo as string }} style={styles.avatar} />
         <Text style={styles.groupMemberText}> {member.name}</Text>
         <Input
-          name={member.id.toString()}
+          name={"Group_Member_" + member.id.toString()}
           style={styles.splitTextInput}
           keyboardType="numeric"
           placeholder="Amount"
@@ -52,7 +61,51 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   };
 
   const onSubmit = (form: any) => {
-    console.log(form);
+    //disable button
+    setCanSend(false);
+
+    let involved: any[] = [];
+    if (form["splitEqual"]) {
+      const each =
+        Math.round((amount / members.length + Number.EPSILON) * 100) / 100;
+      involved = members.map((member) => {
+        return {
+          user: { id: member.id },
+          amount: each,
+        };
+      });
+    } else {
+      involved = Object.keys(form)
+        .filter((key) => key.indexOf("Group_Member_") === 0)
+        .map((key) => {
+          return {
+            user: { id: key.replace("Group_Member_", "") },
+            amount: form[key],
+          };
+        });
+    }
+
+    const body = {
+      title: form["title"],
+      description: form["title"],
+      amount: form["amount"],
+      owner: { id: currentUser.id },
+      group: { id: groupId },
+      involved: involved,
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    };
+    fetch(`${backendApiUrl}/transaction`, requestOptions)
+      .then((response) => {
+        setSuccess(true);
+      })
+      .catch((error) => {
+        setCanSend(true);
+      });
   };
 
   const onErrors = (errors: any) => {
@@ -127,7 +180,10 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
           </Text>
         )}
       </FormProvider>
-      <Pressable onPress={formMethods.handleSubmit(onSubmit, onErrors)}>
+      <Pressable
+        disabled={!canSend}
+        onPress={formMethods.handleSubmit(onSubmit, onErrors)}
+      >
         <View style={styles.sendButton}>
           <AntDesign name="upload" size={24} color="white" />
         </View>

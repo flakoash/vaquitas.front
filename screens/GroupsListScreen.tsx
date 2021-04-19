@@ -77,15 +77,17 @@ const getSummary = (groups: Group[]) => {
 
   return {
     borrowed: {
-      amount: borrowed.reduce((a, b) => a + b.balance, 0),
+      amount:
+        Math.round(borrowed.reduce((a, b) => a + b.balance, 0) * 100) / 100,
       len: borrowed.length,
     },
     lent: {
-      amount: lent.reduce((a, b) => a + b.balance, 0),
+      amount: Math.round(lent.reduce((a, b) => a + b.balance, 0) * 100) / 100,
       len: lent.length,
     },
     settleUp: {
-      amount: settleUp.reduce((a, b) => a + b.balance, 0),
+      amount:
+        Math.round(settleUp.reduce((a, b) => a + b.balance, 0) * 100) / 100,
       len: settleUp.length,
     },
   };

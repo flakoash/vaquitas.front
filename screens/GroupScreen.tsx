@@ -39,7 +39,7 @@ const GroupScreen = () => {
         contentContainerStyle={{ paddingBottom: 65 }}
         keyExtractor={(item) => item.id.toString()}
       />
-      <AddTransactionButton members={members} />
+      <AddTransactionButton members={members} groupId={id} />
     </View>
   );
 };

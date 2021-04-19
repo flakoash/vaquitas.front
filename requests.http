@@ -2,12 +2,29 @@ POST http://192.168.56.1:8080/api/transaction HTTP/1.1
 content-type: application/json
 
 {
-    "title": "test transaction",
-    "amount": 100,
-    "owner": {"id": 1},
-    "group_ent": {"id": 1},
-    "involved": [{"user": {"id": 1}, "amount": 100 } ]
+    "title":"asd",
+    "description":"asd",
+    "amount":9,
+    "owner":{"id":1},
+    "group":{"id":1},
+    "involved":[{"user":{"id":7},"amount":1.5},
+                {"user":{"id":12},"amount":1.5},
+                {"user":{"id":11},"amount":1},
+                {"user":{"id":15},"amount":1},
+                {"user":{"id":8},"amount":1},
+                {"user":{"id":3},"amount":1},
+                {"user":{"id":14},"amount":1},
+                {"user":{"id":5},"amount":1}]
 }
+
+# {
+#     "title": "test transaction 3",
+#     "amount": 200,
+#     "owner": {"id": 1},
+#     "group": {"id": 1},
+#     "involved": [{"user": {"id": 1}, "amount": 100 }, 
+#                 {"user": {"id": 2}, "amount": 100 } ]
+# }
 ########################
 
 

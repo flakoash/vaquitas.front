@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 const useFetch = (
   url: string,
   method = "GET",
-  headers = { "Content-Type": "application/json" },
-  body = null
+  body: any = null,
+  headers = { "Content-Type": "application/json" }
 ): [any[] | null, number] => {
   interface LooseObject {
     [key: string]: any;
@@ -23,7 +23,7 @@ const useFetch = (
   const fetchData = async () => {
     fetch(url, requestOptions)
       .then((response) => {
-        // setStatus(response.status);
+        setStatus(response.status);
         return response.json();
       })
       .then((responseJson) => {
@@ -31,7 +31,7 @@ const useFetch = (
       })
       .catch((error) => {
         console.log(error);
-        // setStatus(error.response.status);
+        setStatus(error.response.status);
       });
   };
   useEffect(() => {
