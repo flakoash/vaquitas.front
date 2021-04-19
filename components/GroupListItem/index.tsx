@@ -56,7 +56,7 @@ const GroupListItem = (props: GroupListItemProps) => {
           <Text>
             {
               group.lastTransaction !== 0
-                ? moment.unix(group.lastTransaction / 1000).format("DD-MM-YYYY")
+                ? moment.unix(group.lastTransaction).format("DD-MM-YYYY")
                 : "Never"
               // .humanize()
             }

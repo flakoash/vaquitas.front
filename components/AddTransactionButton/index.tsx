@@ -14,7 +14,6 @@ export type AddTransaciontButtonProps = {
 const AddTransactionButton = (props: AddTransaciontButtonProps) => {
   const { members } = props;
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(members);
 
   const modal = () => {
     return (

@@ -39,7 +39,7 @@ const GroupTransaction = (props: GroupTransactionProps) => {
         <Text style={styles.title}> {transaction.title} </Text>
         <Text> {} </Text>
 
-        <Text> {moment.unix(transaction.createdAt / 1000).fromNow()} </Text>
+        <Text> {moment.unix(transaction.createdAt).fromNow()} </Text>
       </View>
     </View>
   );

@@ -2,6 +2,13 @@ POST http://192.168.56.1:8080/api/transaction HTTP/1.1
 content-type: application/json
 
 {
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+    "title": "test transaction",
+    "amount": 100,
+    "owner": {"id": 1},
+    "group_ent": {"id": 1},
+    "involved": [{"user": {"id": 1}, "amount": 100 } ]
 }
+########################
+
+
+GET http://192.168.56.1:8080/api/transaction?groupId=1
