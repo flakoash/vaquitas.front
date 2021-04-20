@@ -10,11 +10,17 @@ import AddTransactionForm from "./form";
 export type AddTransaciontButtonProps = {
   members: User[];
   groupId: number;
+  handleRefresh: () => void;
 };
 
 const AddTransactionButton = (props: AddTransaciontButtonProps) => {
-  const { members, groupId } = props;
+  const { members, groupId, handleRefresh } = props;
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSuccess = () => {
+    setModalVisible(false);
+    handleRefresh();
+  };
 
   const modal = () => {
     return (
@@ -43,7 +49,11 @@ const AddTransactionButton = (props: AddTransaciontButtonProps) => {
             >
               <View style={{ paddingTop: 35, padding: 20 }}>
                 <Text style={styles.titleText}>Add a new transaction:</Text>
-                <AddTransactionForm members={members} groupId={groupId} />
+                <AddTransactionForm
+                  members={members}
+                  groupId={groupId}
+                  handleSuccess={handleSuccess}
+                />
               </View>
             </ScrollView>
           </View>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, ToastAndroid, View } from "react-native";
 import { User } from "../../types";
 import Input from "../FormComponents/Input";
 import styles from "./styles";
@@ -14,10 +14,11 @@ const { backendApiUrl } = ENV();
 export type AddTransaciontFormProps = {
   members: User[];
   groupId: number;
+  handleSuccess: () => void;
 };
 
 const AddTransactionForm = (props: AddTransaciontFormProps) => {
-  const { members, groupId } = props;
+  const { members, groupId, handleSuccess } = props;
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
   const [currentUser, setCurrentUser] = useState({ id: null });
   useEffect(() => {
@@ -37,7 +38,10 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
 
   const split = (member: User) => {
     return (
-      <View style={styles.memberContainer} key={member.id.toString()}>
+      <View
+        style={styles.memberContainer}
+        key={"Group_Member_" + member.id.toString()}
+      >
         <Image source={{ uri: member.photo as string }} style={styles.avatar} />
         <Text style={styles.groupMemberText}> {member.name}</Text>
         <Input
@@ -101,7 +105,12 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
     };
     fetch(`${backendApiUrl}/transaction`, requestOptions)
       .then((response) => {
-        setSuccess(true);
+        if (response.status === 200) {
+          setSuccess(true);
+          formMethods.reset();
+          handleSuccess();
+          ToastAndroid.show("Success!", ToastAndroid.SHORT);
+        } else setCanSend(true);
       })
       .catch((error) => {
         setCanSend(true);
@@ -118,7 +127,9 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   // unregister member's amount
   useEffect(() => {
     if (splitEqual) {
-      members.forEach((member) => formMethods.unregister(member.id.toString()));
+      members.forEach((member) =>
+        formMethods.unregister("Group_Member_" + member.id.toString())
+      );
     }
   }, [splitEqual]);
 

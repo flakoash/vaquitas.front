@@ -16,10 +16,16 @@ const { backendApiUrl } = ENV();
 const GroupScreen = () => {
   const route = useRoute();
   const { id, name, members } = route.params;
+  const [refresh, setRefresh] = useState(0);
 
-  const [transactionData, transactionStatus] = useFetch(
-    `${backendApiUrl}/transaction?groupId=${id}`
-  );
+  const [
+    transactionData,
+    transactionStatus,
+  ] = useFetch(`${backendApiUrl}/transaction?groupId=${id}`, [refresh]);
+
+  const handleRefresh = () => {
+    setRefresh(refresh + 1);
+  };
 
   const summary = getSummary(id);
 
@@ -39,7 +45,11 @@ const GroupScreen = () => {
         contentContainerStyle={{ paddingBottom: 65 }}
         keyExtractor={(item) => item.id.toString()}
       />
-      <AddTransactionButton members={members} groupId={id} />
+      <AddTransactionButton
+        members={members}
+        groupId={id}
+        handleRefresh={handleRefresh}
+      />
     </View>
   );
 };
