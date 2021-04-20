@@ -18,10 +18,10 @@ const GroupScreen = () => {
   const { id, name, members } = route.params;
   const [refresh, setRefresh] = useState(0);
 
-  const [
-    transactionData,
-    transactionStatus,
-  ] = useFetch(`${backendApiUrl}/transaction?groupId=${id}`, [refresh]);
+  const [transactionData, transactionStatus] = useFetch(
+    `${backendApiUrl}/transaction?groupId=${id}`,
+    refresh
+  );
 
   const handleRefresh = () => {
     setRefresh(refresh + 1);

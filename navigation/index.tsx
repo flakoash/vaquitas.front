@@ -2,14 +2,15 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  useNavigation,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { ColorSchemeName, View } from "react-native";
+import { ColorSchemeName, Pressable, View } from "react-native";
 import Colors from "../constants/Colors";
 import GroupScreen from "../screens/GroupScreen";
 import GroupsListScreen from "../screens/GroupsListScreen";
-import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
@@ -80,6 +81,19 @@ function RootNavigator() {
         component={GroupScreen}
         options={({ route }) => ({
           title: route.params !== undefined ? route.params.name : "",
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                if (route.params !== undefined) {
+                  route.params.handleRefresh();
+                  route.params.navigation.goBack();
+                }
+              }}
+              style={{ borderRadius: 50, marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </Pressable>
+          ),
           headerRight: () => (
             <View
               style={{

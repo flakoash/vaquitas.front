@@ -7,10 +7,10 @@ import styles from "./styles";
 
 import { useNavigation } from "@react-navigation/native";
 
-export type GroupListItemProps = { group: Group };
+export type GroupListItemProps = { group: Group; handleRefresh: () => void };
 
 const GroupListItem = (props: GroupListItemProps) => {
-  const { group } = props;
+  const { group, handleRefresh } = props;
   const value = group.balance;
 
   const navigation = useNavigation();
@@ -18,6 +18,8 @@ const GroupListItem = (props: GroupListItemProps) => {
   const handleClick = () => {
     // console.warn("clicked:" + group.name);
     navigation.navigate("Group", {
+      handleRefresh: handleRefresh,
+      navigation: navigation,
       id: group.id,
       name: group.name,
       members: group.members,

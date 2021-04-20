@@ -33,6 +33,11 @@ export default function TabOneScreen() {
   const [currentUser, setCurrentUser] = useState({ id: null });
   const [summary, setSummary] = useState(emptySummary);
   const [url, setUrl] = useState("");
+  const [update, setUpdate] = useState(0);
+
+  const handleRefresh = () => {
+    setUpdate(update + 1);
+  };
 
   useEffect(() => {
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
@@ -42,7 +47,7 @@ export default function TabOneScreen() {
     if (currentUser.id !== null)
       setUrl(`${backendApiUrl}/group?userId=${currentUser.id}`);
   }, [currentUser.id]);
-  const [groupsData, groupsStatus] = useFetch(url);
+  const [groupsData, groupsStatus] = useFetch(url, update);
 
   useEffect(() => {
     if (groupsData !== null) setSummary(getSummary(groupsData));
@@ -57,7 +62,9 @@ export default function TabOneScreen() {
       <Animated.FlatList
         style={{ width: "100%" }}
         data={groupsData}
-        renderItem={({ item }) => <GroupListItem group={item} />}
+        renderItem={({ item }) => (
+          <GroupListItem group={item} handleRefresh={handleRefresh} />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
