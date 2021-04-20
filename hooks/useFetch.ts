@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useFetch = (
-  url: string,
-  method = "GET",
-  body: any = null,
-  headers = { "Content-Type": "application/json" }
-): [any[] | null, number] => {
+const useFetch = (url: string, refresh: number): [any[] | null, number] => {
   interface LooseObject {
     [key: string]: any;
   }
@@ -13,12 +8,9 @@ const useFetch = (
   const [status, setStatus] = useState(0);
 
   const requestOptions: LooseObject = {
-    method: method,
-    headers: headers,
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
   };
-
-  if (method !== "GET" && method !== "HEAD")
-    requestOptions["body"] = JSON.stringify(body);
 
   const fetchData = async () => {
     fetch(url, requestOptions)
@@ -36,7 +28,10 @@ const useFetch = (
   };
   useEffect(() => {
     if (url !== "") fetchData();
-  }, [url]);
+    return () => {
+      url = "";
+    };
+  }, [url, refresh]);
 
   return [data, status];
 };
