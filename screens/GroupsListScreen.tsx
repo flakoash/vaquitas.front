@@ -10,6 +10,7 @@ import useAsyncStorage from "../hooks/useAsyncStorage";
 import { Group, User } from "../types";
 import ENV from "../environment";
 import useFetch from "../hooks/useFetch";
+import AddGroup from "../components/addGroup";
 
 const { backendApiUrl } = ENV();
 
@@ -66,7 +67,9 @@ export default function TabOneScreen() {
           <GroupListItem group={item} handleRefresh={handleRefresh} />
         )}
         keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{ paddingBottom: 30 }}
       />
+      <AddGroup handleRefresh={handleRefresh} />
     </View>
   );
 }

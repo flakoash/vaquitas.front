@@ -17,15 +17,17 @@ content-type: application/json
                 {"user":{"id":5},"amount":1}]
 }
 
-# {
-#     "title": "test transaction 3",
-#     "amount": 200,
-#     "owner": {"id": 1},
-#     "group": {"id": 1},
-#     "involved": [{"user": {"id": 1}, "amount": 100 }, 
-#                 {"user": {"id": 2}, "amount": 100 } ]
-# }
 ########################
 
-
 GET http://192.168.56.1:8080/api/transaction?groupId=1
+
+###########################
+
+POST http://192.168.56.1:8080/api/group HTTP/1.1
+content-type: application/json
+
+{
+    "name":"test Group",
+    "icon":"",
+    "members":[{"id":7},{"id":1}]
+}
