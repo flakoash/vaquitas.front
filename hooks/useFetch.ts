@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
+import useAsyncStorage from "./useAsyncStorage";
 
-const useFetch = (url: string, refresh: number): [any[] | null, number] => {
+const useFetch = (
+  url: string,
+  refresh: number,
+  useAuth: boolean = false
+): [any[] | null, number] => {
   interface LooseObject {
     [key: string]: any;
   }
   const [data, setData] = useState(null);
   const [status, setStatus] = useState(0);
+  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
 
-  const requestOptions: LooseObject = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  };
-
-  const fetchData = async () => {
+  const fetchData = async (requestOptions: LooseObject) => {
     fetch(url, requestOptions)
       .then((response) => {
         setStatus(response.status);
         return response.json();
       })
       .then((responseJson) => {
+        console.log(responseJson);
         setData(responseJson);
       })
       .catch((error) => {
@@ -26,12 +28,22 @@ const useFetch = (url: string, refresh: number): [any[] | null, number] => {
         setStatus(error.response.status);
       });
   };
+
   useEffect(() => {
-    if (url !== "") fetchData();
+    if (url !== "" && token !== null) {
+      const requestOptions: LooseObject = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      };
+      fetchData(requestOptions);
+    }
     return () => {
       url = "";
     };
-  }, [url, refresh]);
+  }, [url, token, refresh]);
 
   return [data, status];
 };
