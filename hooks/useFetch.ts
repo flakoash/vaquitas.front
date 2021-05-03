@@ -20,7 +20,6 @@ const useFetch = (
         return response.json();
       })
       .then((responseJson) => {
-        console.log(responseJson);
         setData(responseJson);
       })
       .catch((error) => {
