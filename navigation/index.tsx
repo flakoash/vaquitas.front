@@ -15,6 +15,7 @@ import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import Login from "../screens/login";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -48,9 +49,14 @@ function RootNavigator() {
       }}
     >
       {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
-
       <Stack.Screen
         name="Root"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="MainTab"
         component={GroupsListScreen}
         options={{
           title: "🐮's App!",
