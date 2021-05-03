@@ -33,7 +33,7 @@ export default function TabOneScreen() {
   const [summary, setSummary] = useState(emptySummary);
   const [update, setUpdate] = useState(0);
 
-  const url = `${backendApiUrl}/group?userId=1`;
+  const url = `${backendApiUrl}/group`;
 
   const handleRefresh = () => {
     setUpdate(update + 1);
