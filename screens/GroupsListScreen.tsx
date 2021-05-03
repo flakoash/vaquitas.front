@@ -30,28 +30,19 @@ const emptySummary = {
 };
 
 export default function TabOneScreen() {
-  const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
-  const [currentUser, setCurrentUser] = useState({ id: null });
   const [summary, setSummary] = useState(emptySummary);
-  const [url, setUrl] = useState("");
   const [update, setUpdate] = useState(0);
+
+  const url = `${backendApiUrl}/group?userId=1`;
 
   const handleRefresh = () => {
     setUpdate(update + 1);
   };
 
-  useEffect(() => {
-    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
-  }, [isUserLoaded]);
-
-  useEffect(() => {
-    if (currentUser.id !== null)
-      setUrl(`${backendApiUrl}/group?userId=${currentUser.id}`);
-  }, [currentUser.id]);
   const [groupsData, groupsStatus] = useFetch(url, update);
 
   useEffect(() => {
-    if (groupsData !== null) setSummary(getSummary(groupsData));
+    if (groupsStatus === 200) setSummary(getSummary(groupsData));
   }, [groupsData]);
 
   return (
@@ -60,15 +51,17 @@ export default function TabOneScreen() {
         <TotalBalance summary={summary} />
       </Animated.View>
 
-      <Animated.FlatList
-        style={{ width: "100%" }}
-        data={groupsData}
-        renderItem={({ item }) => (
-          <GroupListItem group={item} handleRefresh={handleRefresh} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 30 }}
-      />
+      {groupsStatus === 200 && (
+        <Animated.FlatList
+          style={{ width: "100%" }}
+          data={groupsData}
+          renderItem={({ item }) => (
+            <GroupListItem group={item} handleRefresh={handleRefresh} />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingBottom: 30 }}
+        />
+      )}
       <AddGroup handleRefresh={handleRefresh} />
     </View>
   );
