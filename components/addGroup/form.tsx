@@ -52,7 +52,6 @@ const addGroupForm = (props: addGroupFormProps) => {
       members: groupMembers,
       icon: "https://robohash.org/etautemunde.png?size=50x50&set=set1",
     };
-    console.log(body);
 
     const requestOptions = {
       method: "POST",

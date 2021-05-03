@@ -35,7 +35,6 @@ const Login = () => {
       })
       .then((jsonResponse) => {
         if (jsonResponse !== "") {
-          console.log(jsonResponse);
           formMethods.reset();
           ToastAndroid.show("Success!", ToastAndroid.SHORT);
           updateStorageToken(jsonResponse.token);
@@ -44,8 +43,6 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        console.log("error");
-        console.log(error);
         setSuccess(-1);
       });
   };
