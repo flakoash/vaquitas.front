@@ -6,7 +6,7 @@ const envVars = {
     backendApiUrl: "http://192.168.56.1:8080/api",
   },
   prod: {
-    backendApiUrl: "http://192.168.56.1:8080/api",
+    backendApiUrl: "https://vaquitas.herokuapp.com/api",
   },
 };
 

@@ -16,7 +16,6 @@ const GroupListItem = (props: GroupListItemProps) => {
   const navigation = useNavigation();
 
   const handleClick = () => {
-    // console.warn("clicked:" + group.name);
     navigation.navigate("Group", {
       handleRefresh: handleRefresh,
       navigation: navigation,
@@ -63,7 +62,6 @@ const GroupListItem = (props: GroupListItemProps) => {
               // .humanize()
             }
           </Text>
-          {/* <Text> Yesterday </Text> */}
         </View>
       </View>
     </TouchableWithoutFeedback>
