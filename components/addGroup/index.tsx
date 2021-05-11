@@ -1,5 +1,5 @@
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { View, Text, Pressable, Modal, Alert, ScrollView } from "react-native";
 import Colors from "../../constants/Colors";

@@ -1,12 +1,14 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { defaultFormat } from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Pressable, Text, ToastAndroid, View } from "react-native";
 import CheckBox from "../FormComponents/CheckBox";
 import Input from "../FormComponents/Input";
 import styles from "./styles";
 import ENV from "../../environment";
+
+import * as Contacts from "expo-contacts";
 
 const { backendApiUrl } = ENV();
 
@@ -18,26 +20,51 @@ const addGroupForm = (props: addGroupFormProps) => {
   const { handleSuccess } = props;
   const [success, setSuccess] = useState(false);
   const [canSend, setCanSend] = useState(true);
+  const [contacts, setContacts] = useState(null);
+
   const formMethods = useForm({
     mode: "onBlur",
   });
 
-  const getContacts = () => {
-    return [
-      {
-        id: "2",
-        name: "user 2asdasdasdasdasdasdasd asdasdasd",
-        phoneNumber: "789123456",
-      },
-      { id: "3", name: "user 3", phoneNumber: "789123456" },
-      { id: "4", name: "user 4", phoneNumber: "789123456" },
-      { id: "5", name: "user 5", phoneNumber: "789123456" },
-      { id: "6", name: "user 6", phoneNumber: "789123456" },
-      { id: "7", name: "user 7", phoneNumber: "789123456" },
-      { id: "8", name: "user 8", phoneNumber: "789123456" },
-      { id: "9", name: "user 9", phoneNumber: "789123456" },
-    ];
-  };
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === "granted") {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.Emails, Contacts.Fields.PhoneNumbers],
+        });
+        let contactArray = [];
+        data.forEach((contact, indx) => {
+          contact.phoneNumbers?.forEach((phone, indx2) => {
+            contactArray.push({
+              id: indx + indx2 + 1,
+              name: contact.firstName,
+              phoneNumber: phone.number,
+            });
+          });
+        });
+        console.log(contactArray);
+        if (contactArray.length > 0) setContacts(contactArray);
+      }
+    })();
+  }, []);
+
+  // const getContacts = () => {
+  //   return [
+  //     {
+  //       id: "2",
+  //       name: "user 2asdasdasdasdasdasdasd asdasdasd",
+  //       phoneNumber: "789123456",
+  //     },
+  //     { id: "3", name: "user 3", phoneNumber: "789123456" },
+  //     { id: "4", name: "user 4", phoneNumber: "789123456" },
+  //     { id: "5", name: "user 5", phoneNumber: "789123456" },
+  //     { id: "6", name: "user 6", phoneNumber: "789123456" },
+  //     { id: "7", name: "user 7", phoneNumber: "789123456" },
+  //     { id: "8", name: "user 8", phoneNumber: "789123456" },
+  //     { id: "9", name: "user 9", phoneNumber: "789123456" },
+  //   ];
+  // };
 
   const onSubmit = (form: any) => {
     const groupMembers = Object.keys(form)
@@ -77,13 +104,13 @@ const addGroupForm = (props: addGroupFormProps) => {
   };
 
   const checkboxes = () => {
-    const contacts = getContacts();
+    // const contacts = getContacts();
     return (
       <View style={{ width: "100%", marginTop: 10 }}>
         {contacts.map((contact) => {
           return (
             <View key={contact.id} style={styles.memberContainer}>
-              <CheckBox name={contact.id} defaultValue={false} />
+              <CheckBox name={contact.name} defaultValue={false} />
               <Text
                 numberOfLines={1}
                 style={{
@@ -113,7 +140,7 @@ const addGroupForm = (props: addGroupFormProps) => {
           style={styles.textInput}
         />
 
-        {checkboxes()}
+        {contacts !== null && checkboxes()}
       </FormProvider>
       <Pressable onPress={formMethods.handleSubmit(onSubmit, onErrors)}>
         <View style={styles.sendButton}>
