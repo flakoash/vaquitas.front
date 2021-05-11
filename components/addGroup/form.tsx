@@ -9,6 +9,7 @@ import styles from "./styles";
 import ENV from "../../environment";
 
 import * as Contacts from "expo-contacts";
+import useAsyncStorage from "../../hooks/useAsyncStorage";
 
 const { backendApiUrl } = ENV();
 
@@ -21,6 +22,7 @@ const addGroupForm = (props: addGroupFormProps) => {
   const [success, setSuccess] = useState(false);
   const [canSend, setCanSend] = useState(true);
   const [contacts, setContacts] = useState(null);
+  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
 
   const formMethods = useForm({
     mode: "onBlur",
@@ -37,13 +39,12 @@ const addGroupForm = (props: addGroupFormProps) => {
         data.forEach((contact, indx) => {
           contact.phoneNumbers?.forEach((phone, indx2) => {
             contactArray.push({
-              id: indx + indx2 + 1,
+              id: indx + indx2 + 1 + "",
               name: contact.firstName,
               phoneNumber: phone.number,
             });
           });
         });
-        console.log(contactArray);
         if (contactArray.length > 0) setContacts(contactArray);
       }
     })();
@@ -63,11 +64,17 @@ const addGroupForm = (props: addGroupFormProps) => {
       icon: "https://robohash.org/etautemunde.png?size=50x50&set=set1",
     };
 
+    console.log(body);
+
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify(body),
     };
+    console.log(requestOptions);
     fetch(`${backendApiUrl}/group`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
@@ -75,7 +82,11 @@ const addGroupForm = (props: addGroupFormProps) => {
           formMethods.reset();
           handleSuccess();
           ToastAndroid.show("Success!", ToastAndroid.SHORT);
-        } else setCanSend(true);
+        } else {
+          console.log("error");
+          console.log(response.status);
+          setCanSend(true);
+        }
       })
       .catch((error) => {
         setCanSend(true);
@@ -92,7 +103,7 @@ const addGroupForm = (props: addGroupFormProps) => {
         {contacts.map((contact) => {
           return (
             <View key={contact.id} style={styles.memberContainer}>
-              <CheckBox name={contact.name} defaultValue={false} />
+              <CheckBox name={contact.id} defaultValue={false} />
               <Text
                 numberOfLines={1}
                 style={{
