@@ -49,23 +49,6 @@ const addGroupForm = (props: addGroupFormProps) => {
     })();
   }, []);
 
-  // const getContacts = () => {
-  //   return [
-  //     {
-  //       id: "2",
-  //       name: "user 2asdasdasdasdasdasdasd asdasdasd",
-  //       phoneNumber: "789123456",
-  //     },
-  //     { id: "3", name: "user 3", phoneNumber: "789123456" },
-  //     { id: "4", name: "user 4", phoneNumber: "789123456" },
-  //     { id: "5", name: "user 5", phoneNumber: "789123456" },
-  //     { id: "6", name: "user 6", phoneNumber: "789123456" },
-  //     { id: "7", name: "user 7", phoneNumber: "789123456" },
-  //     { id: "8", name: "user 8", phoneNumber: "789123456" },
-  //     { id: "9", name: "user 9", phoneNumber: "789123456" },
-  //   ];
-  // };
-
   const onSubmit = (form: any) => {
     const groupMembers = Object.keys(form)
       .filter((key) => key.indexOf("name") !== 0 && form[key])
@@ -104,7 +87,6 @@ const addGroupForm = (props: addGroupFormProps) => {
   };
 
   const checkboxes = () => {
-    // const contacts = getContacts();
     return (
       <View style={{ width: "100%", marginTop: 10 }}>
         {contacts.map((contact) => {
