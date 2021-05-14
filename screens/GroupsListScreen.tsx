@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Animated, FlatList, StyleSheet } from "react-native";
+import { Animated, FlatList, StatusBar, StyleSheet } from "react-native";
 
 import GroupListItem from "../components/GroupListItem";
 import { Text, View } from "../components/Themed";
@@ -11,6 +11,7 @@ import { Group, User } from "../types";
 import ENV from "../environment";
 import useFetch from "../hooks/useFetch";
 import AddGroup from "../components/addGroup";
+import Header from "../components/Header/Header";
 
 const { backendApiUrl } = ENV();
 
@@ -32,6 +33,8 @@ const emptySummary = {
 export default function TabOneScreen() {
   const [summary, setSummary] = useState(emptySummary);
   const [update, setUpdate] = useState(0);
+  const [data, setData] = useState(null);
+  const [searchText, setsearchText] = useState("");
 
   const url = `${backendApiUrl}/group`;
 
@@ -45,22 +48,51 @@ export default function TabOneScreen() {
     if (groupsStatus === 200) setSummary(getSummary(groupsData));
   }, [groupsData]);
 
+  useEffect(() => {
+    if (searchText !== "") {
+      const res = groupsData?.filter((group) => {
+        return group.name.toLowerCase().includes(searchText.toLowerCase());
+      });
+      console.log(res);
+      setData(res);
+    } else setData(groupsData);
+  }, [searchText, groupsData]);
+
   return (
     <View style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={Colors.light.tint}
+        barStyle="dark-content"
+        showHideTransition="fade"
+        hidden={false}
+      />
+      <Header
+        title="🐮's App!"
+        hasBackButton={true}
+        setSearchText={setsearchText}
+        handleBack={() => {
+          console.log("pressed...");
+        }}
+      />
       <Animated.View style={{ width: "100%" }}>
         <TotalBalance summary={summary} />
       </Animated.View>
 
-      {groupsStatus === 200 && (
+      {data !== null ? (
         <Animated.FlatList
           style={{ width: "100%" }}
-          data={groupsData}
+          data={data}
           renderItem={({ item }) => (
             <GroupListItem group={item} handleRefresh={handleRefresh} />
           )}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{ paddingBottom: 30 }}
         />
+      ) : (
+        <View style={{ height: "91.5%", backgroundColor: "transparent" }}>
+          <Text>No data found...{searchText}</Text>
+        </View>
       )}
       <AddGroup handleRefresh={handleRefresh} />
     </View>

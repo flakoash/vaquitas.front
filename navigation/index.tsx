@@ -59,6 +59,7 @@ function RootNavigator() {
         name="MainTab"
         component={GroupsListScreen}
         options={{
+          headerShown: false,
           title: "🐮's App!",
           headerRight: () => (
             <View
