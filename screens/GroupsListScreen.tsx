@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Animated, FlatList, StatusBar, StyleSheet } from "react-native";
+import { Animated, StatusBar, StyleSheet } from "react-native";
 
 import GroupListItem from "../components/GroupListItem";
 import { Text, View } from "../components/Themed";
 import TotalBalance from "../components/TotalBalance";
 import Colors from "../constants/Colors";
-import groupsData from "../data/groups";
-import useAsyncStorage from "../hooks/useAsyncStorage";
-import { Group, User } from "../types";
+import { Group } from "../types";
 import ENV from "../environment";
 import useFetch from "../hooks/useFetch";
 import AddGroup from "../components/addGroup";
