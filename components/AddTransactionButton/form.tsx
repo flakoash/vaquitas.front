@@ -21,6 +21,8 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   const { members, groupId, handleSuccess } = props;
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
   const [currentUser, setCurrentUser] = useState({ id: null });
+  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
+
   useEffect(() => {
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
   }, [isUserLoaded]);
@@ -100,7 +102,10 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify(body),
     };
     fetch(`${backendApiUrl}/transaction`, requestOptions)
