@@ -28,9 +28,11 @@ const Header = (props: HeaderProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
-        <Pressable style={styles.backArrowContainer} onPress={handleBack}>
-          <Ionicons name="arrow-back-outline" size={26} color="black" />
-        </Pressable>
+        {hasBackButton && (
+          <Pressable style={styles.backArrowContainer} onPress={handleBack}>
+            <Ionicons name="arrow-back-outline" size={26} color="black" />
+          </Pressable>
+        )}
         {!cantSearch ? (
           <View style={styles.titleContainer}>
             <Text style={styles.title}> {title} </Text>
