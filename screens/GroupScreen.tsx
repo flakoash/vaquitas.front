@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useRoute } from "@react-navigation/native";
-import { FlatList, View, StyleSheet } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { FlatList, View, StyleSheet, StatusBar } from "react-native";
 import GroupTransaction from "../components/GroupTransaction";
 import TotalBalance from "../components/TotalBalance";
 import useAsyncStorage from "../hooks/useAsyncStorage";
@@ -10,6 +10,7 @@ import { Animated } from "react-native";
 import AddTransactionButton from "../components/AddTransactionButton";
 import ENV from "../environment";
 import useFetch from "../hooks/useFetch";
+import Header from "../components/Header/Header";
 
 const { backendApiUrl } = ENV();
 
@@ -17,6 +18,10 @@ const GroupScreen = () => {
   const route = useRoute();
   const { id, name, members } = route.params;
   const [refresh, setRefresh] = useState(0);
+  const [searchText, setsearchText] = useState("");
+
+  const [data, setData] = useState(null);
+  const navigation = useNavigation();
 
   const [transactionData, transactionStatus] = useFetch(
     `${backendApiUrl}/transaction?groupId=${id}`,
@@ -27,10 +32,35 @@ const GroupScreen = () => {
     setRefresh(refresh + 1);
   };
 
+  useEffect(() => {
+    if (searchText !== "") {
+      const res = transactionData?.filter((group) => {
+        return group.title.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setData(res);
+    } else setData(transactionData);
+  }, [searchText, transactionData]);
+
   const summary = getSummary(id);
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={Colors.light.tint}
+        barStyle="dark-content"
+        showHideTransition="fade"
+        hidden={false}
+      />
+      <Header
+        title={name}
+        hasBackButton={true}
+        setSearchText={setsearchText}
+        handleBack={() => {
+          console.log("pressed...");
+          navigation.goBack();
+        }}
+      />
       <Animated.View style={{ width: "100%" }}>
         <TotalBalance
           summary={summary}
@@ -40,7 +70,7 @@ const GroupScreen = () => {
       </Animated.View>
       <Animated.FlatList
         style={{ width: "100%" }}
-        data={transactionData}
+        data={data}
         renderItem={({ item }) => <GroupTransaction transaction={item} />}
         contentContainerStyle={{ paddingBottom: 65 }}
         keyExtractor={(item) => item.id.toString()}

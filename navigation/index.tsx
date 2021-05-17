@@ -60,20 +60,6 @@ function RootNavigator() {
         component={GroupsListScreen}
         options={{
           headerShown: false,
-          title: "🐮's App!",
-          headerRight: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                width: 55,
-                justifyContent: "space-between",
-                marginRight: 10,
-              }}
-            >
-              <Octicons name="search" size={22} />
-              <MaterialCommunityIcons name="dots-vertical" size={22} />
-            </View>
-          ),
         }}
       />
 
@@ -86,35 +72,9 @@ function RootNavigator() {
       <Stack.Screen
         name="Group"
         component={GroupScreen}
-        options={({ route }) => ({
-          title: route.params !== undefined ? route.params.name : "",
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                if (route.params !== undefined) {
-                  route.params.handleRefresh();
-                  route.params.navigation.goBack();
-                }
-              }}
-              style={{ borderRadius: 50, marginLeft: 15 }}
-            >
-              <Ionicons name="arrow-back" size={24} color="black" />
-            </Pressable>
-          ),
-          headerRight: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                width: 55,
-                justifyContent: "space-between",
-                marginRight: 10,
-              }}
-            >
-              <Octicons name="search" size={22} />
-              <MaterialCommunityIcons name="dots-vertical" size={22} />
-            </View>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );
