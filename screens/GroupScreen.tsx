@@ -16,7 +16,7 @@ const { backendApiUrl } = ENV();
 
 const GroupScreen = () => {
   const route = useRoute();
-  const { id, name, members } = route.params;
+  const { handleRefresh, id, name, members } = route.params;
   const [refresh, setRefresh] = useState(0);
   const [searchText, setsearchText] = useState("");
 
@@ -28,7 +28,7 @@ const GroupScreen = () => {
     refresh
   );
 
-  const handleRefresh = () => {
+  const localHandleRefresh = () => {
     setRefresh(refresh + 1);
   };
 
@@ -58,6 +58,7 @@ const GroupScreen = () => {
         setSearchText={setsearchText}
         handleBack={() => {
           console.log("pressed...");
+          handleRefresh();
           navigation.goBack();
         }}
       />
@@ -78,7 +79,7 @@ const GroupScreen = () => {
       <AddTransactionButton
         members={members}
         groupId={id}
-        handleRefresh={handleRefresh}
+        handleRefresh={localHandleRefresh}
       />
     </View>
   );

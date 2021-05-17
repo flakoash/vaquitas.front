@@ -18,7 +18,6 @@ const GroupListItem = (props: GroupListItemProps) => {
   const handleClick = () => {
     navigation.navigate("Group", {
       handleRefresh: handleRefresh,
-      navigation: navigation,
       id: group.id,
       name: group.name,
       members: group.members,
