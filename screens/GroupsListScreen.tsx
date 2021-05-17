@@ -54,7 +54,6 @@ export default function TabOneScreen() {
       const res = groupsData?.filter((group) => {
         return group.name.toLowerCase().includes(searchText.toLowerCase());
       });
-      console.log(res);
       setData(res);
     } else setData(groupsData);
   }, [searchText, groupsData]);

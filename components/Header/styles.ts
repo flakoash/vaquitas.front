@@ -9,6 +9,15 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     backgroundColor: Colors.light.tint,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   backArrowContainer: {
     paddingLeft: 15,
