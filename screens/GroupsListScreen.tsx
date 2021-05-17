@@ -10,6 +10,7 @@ import ENV from "../environment";
 import useFetch from "../hooks/useFetch";
 import AddGroup from "../components/addGroup";
 import Header from "../components/Header/Header";
+import { useNavigation } from "@react-navigation/native";
 
 const { backendApiUrl } = ENV();
 
@@ -33,6 +34,8 @@ export default function TabOneScreen() {
   const [update, setUpdate] = useState(0);
   const [data, setData] = useState(null);
   const [searchText, setsearchText] = useState("");
+
+  const navigation = useNavigation();
 
   const url = `${backendApiUrl}/group`;
 
@@ -71,6 +74,7 @@ export default function TabOneScreen() {
         setSearchText={setsearchText}
         handleBack={() => {
           console.log("pressed...");
+          navigation.goBack();
         }}
       />
       <Animated.View style={{ width: "100%" }}>
