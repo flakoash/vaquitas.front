@@ -22,6 +22,7 @@ const addGroupForm = (props: addGroupFormProps) => {
   const [success, setSuccess] = useState(false);
   const [canSend, setCanSend] = useState(true);
   const [contacts, setContacts] = useState(null);
+  const [appContacts, setAppContacts] = useState(null);
   const [token, _, __, tokenLoaded] = useAsyncStorage("token");
 
   const formMethods = useForm({
@@ -50,6 +51,42 @@ const addGroupForm = (props: addGroupFormProps) => {
     })();
   }, []);
 
+  const verifyContactList = () => {
+    const body = contacts.map((contact) => contact.phoneNumber);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    };
+    console.log(requestOptions);
+    fetch(`${backendApiUrl}/user/findByPhone`, requestOptions)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          ToastAndroid.show(
+            "No contacts using the app found...",
+            ToastAndroid.SHORT
+          );
+          return null;
+        }
+      })
+      .then((jsonResponse) => {
+        console.log(jsonResponse);
+        setAppContacts(jsonResponse);
+      })
+      .catch((error) => {
+        setCanSend(true);
+      });
+  };
+
+  useEffect(() => {
+    if (contacts !== null) verifyContactList();
+  }, [contacts]);
+
   const onSubmit = (form: any) => {
     const groupMembers = Object.keys(form)
       .filter((key) => key.indexOf("name") !== 0 && form[key])
@@ -63,8 +100,6 @@ const addGroupForm = (props: addGroupFormProps) => {
       members: groupMembers,
       icon: "https://robohash.org/etautemunde.png?size=50x50&set=set1",
     };
-
-    console.log(body);
 
     const requestOptions = {
       method: "POST",
@@ -100,26 +135,30 @@ const addGroupForm = (props: addGroupFormProps) => {
   const checkboxes = () => {
     return (
       <View style={{ width: "100%", marginTop: 10 }}>
-        {contacts.map((contact) => {
-          return (
-            <View key={contact.id} style={styles.memberContainer}>
-              <CheckBox name={contact.id} defaultValue={false} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  textAlignVertical: "center",
-                  textAlign: "left",
-                  width: "60%",
-                }}
-              >
-                {contact.name}
-              </Text>
-              <Text style={{ textAlignVertical: "center", color: "gray" }}>
-                {" (" + contact.phoneNumber + ") "}
-              </Text>
-            </View>
-          );
-        })}
+        {appContacts !== null ? (
+          appContacts.map((contact) => {
+            return (
+              <View key={contact.id} style={styles.memberContainer}>
+                <CheckBox name={contact.id.toString()} defaultValue={false} />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    textAlignVertical: "center",
+                    textAlign: "left",
+                    width: "60%",
+                  }}
+                >
+                  {contact.name}
+                </Text>
+                <Text style={{ textAlignVertical: "center", color: "gray" }}>
+                  {" (" + contact.phoneNumber + ") "}
+                </Text>
+              </View>
+            );
+          })
+        ) : (
+          <Text>No contacts found</Text>
+        )}
       </View>
     );
   };
