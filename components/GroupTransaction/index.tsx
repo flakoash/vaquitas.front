@@ -1,5 +1,5 @@
 import moment from "moment";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import useAsyncStorage from "../../hooks/useAsyncStorage";
 import { Transaction, User } from "../../types";
@@ -11,10 +11,14 @@ export type GroupTransactionProps = {
 const GroupTransaction = (props: GroupTransactionProps) => {
   const { transaction } = props;
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
-
-  const currentUser: User = isUserLoaded
-    ? JSON.parse(storageUser as string)
-    : null;
+  const [currentUser, setCurrentUser] = useState({
+    id: null,
+    username: null,
+    token: null,
+  });
+  useEffect(() => {
+    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
+  }, [isUserLoaded]);
 
   const currentUserTransaction = () => {
     return currentUser ? currentUser.id === transaction.owner.id : false;

@@ -1,11 +1,12 @@
 POST http://192.168.56.1:8080/api/transaction HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXNlciIsImV4cCI6MTYyMDIyODk2OH0.MneDyVXm6QEiKEmfFUiL1625CpTLz2x7OhdOfdpwM81WlCbBIZS-wL_PgVJnVovRMdB4tllUhH5V7_ziNrzjkQ
 
 {
     "title":"asd",
     "description":"asd",
     "amount":9,
-    "owner":{"id":1},
+    "owner":{"id":10},
     "group":{"id":1},
     "involved":[{"user":{"id":7},"amount":1.5},
                 {"user":{"id":12},"amount":1.5},
@@ -19,7 +20,14 @@ content-type: application/json
 
 ########################
 
+GET http://192.168.56.1:8080/api/group?userId=2
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXNlciIsImV4cCI6MTYyMDA1NjIwNX0.gO36IhNao75CgcUF01ixYuW7Qn497DW-WGUOcFobL0dD0isOpLRMTs9V2TjVqhEj_XtS98wH8ZvtXOWHFxj5UQ
+
+
+########################
+
 GET http://192.168.56.1:8080/api/transaction?groupId=1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXNlciIsImV4cCI6MTYyMDIyODk2OH0.MneDyVXm6QEiKEmfFUiL1625CpTLz2x7OhdOfdpwM81WlCbBIZS-wL_PgVJnVovRMdB4tllUhH5V7_ziNrzjkQ
 
 ###########################
 
@@ -31,3 +39,34 @@ content-type: application/json
     "icon":"",
     "members":[{"id":7},{"id":1}]
 }
+
+###########################
+
+POST http://192.168.56.1:8080/api/user/singup HTTP/1.1
+content-type: application/json
+
+{
+    "name":"test Group",
+    "username":"testUser",
+    "password":"secret",
+    "phoneNumber": "123456"
+}
+
+
+###########################
+POST http://192.168.56.1:8080/api/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "username":"testUser",
+    "password":"secret"
+}
+
+
+###########################
+
+POST http://192.168.56.1:8080/api/user/findByPhone HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXNlciIsImV4cCI6MTYyMDc1NDYxNH0.p90JBv3qaPkAoY8wvqTrrKr7Q-FXPPoSJLtgw1Img5AT1wpDUgxjpEN6dQ3AYZ_gYbM45BeXGHppwzTQiJlkVQ
+content-type: application/json
+
+["319-958-6659", "921-516-8411", "142-364-8028"]

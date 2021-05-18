@@ -15,7 +15,7 @@ const { backendApiUrl } = ENV();
 
 const Login = () => {
   const [success, setSuccess] = useState(0);
-  const [token, updateStorageToken, _] = useAsyncStorage("token");
+  const [user, updateStorageUser, _] = useAsyncStorage("user_id");
 
   const navigation = useNavigation();
 
@@ -37,7 +37,7 @@ const Login = () => {
         if (jsonResponse !== "") {
           formMethods.reset();
           ToastAndroid.show("Success!", ToastAndroid.SHORT);
-          updateStorageToken(jsonResponse.token);
+          updateStorageUser(JSON.stringify(jsonResponse));
           navigation.navigate("MainTab");
         } else {
         }

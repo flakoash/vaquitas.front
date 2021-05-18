@@ -23,11 +23,19 @@ const addGroupForm = (props: addGroupFormProps) => {
   const [canSend, setCanSend] = useState(true);
   const [contacts, setContacts] = useState(null);
   const [appContacts, setAppContacts] = useState(null);
-  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
+  const [storageUser, ..._] = useAsyncStorage("user_id");
+  const [currentUser, setCurrentUser] = useState({
+    id: null,
+    username: null,
+    token: null,
+  });
 
   const formMethods = useForm({
     mode: "onBlur",
   });
+  useEffect(() => {
+    if (storageUser !== null) setCurrentUser(JSON.parse(storageUser as string));
+  }, [storageUser]);
 
   useEffect(() => {
     (async () => {
@@ -57,7 +65,7 @@ const addGroupForm = (props: addGroupFormProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + currentUser.token,
       },
       body: JSON.stringify(body),
     };
@@ -105,7 +113,7 @@ const addGroupForm = (props: addGroupFormProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + currentUser.token,
       },
       body: JSON.stringify(body),
     };

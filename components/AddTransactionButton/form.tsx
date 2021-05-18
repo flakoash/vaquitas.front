@@ -20,8 +20,11 @@ export type AddTransaciontFormProps = {
 const AddTransactionForm = (props: AddTransaciontFormProps) => {
   const { members, groupId, handleSuccess } = props;
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
-  const [currentUser, setCurrentUser] = useState({ id: null });
-  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
+  const [currentUser, setCurrentUser] = useState({
+    id: null,
+    username: null,
+    token: null,
+  });
 
   useEffect(() => {
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
@@ -104,7 +107,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + currentUser.token,
       },
       body: JSON.stringify(body),
     };

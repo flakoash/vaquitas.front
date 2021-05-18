@@ -11,7 +11,15 @@ const useFetch = (
   }
   const [data, setData] = useState(null);
   const [status, setStatus] = useState(0);
-  const [token, _, __, tokenLoaded] = useAsyncStorage("token");
+  const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
+  const [currentUser, setCurrentUser] = useState({
+    id: null,
+    username: null,
+    token: null,
+  });
+  useEffect(() => {
+    if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
+  }, [isUserLoaded]);
 
   const fetchData = async (requestOptions: LooseObject) => {
     fetch(url, requestOptions)
@@ -29,12 +37,12 @@ const useFetch = (
   };
 
   useEffect(() => {
-    if (url !== "" && token !== null) {
+    if (url !== "" && currentUser.token !== null) {
       const requestOptions: LooseObject = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + currentUser.token,
         },
       };
       fetchData(requestOptions);
@@ -42,7 +50,7 @@ const useFetch = (
     return () => {
       url = "";
     };
-  }, [url, token, refresh]);
+  }, [url, currentUser.token, refresh]);
 
   return [data, status];
 };
