@@ -103,6 +103,7 @@ const addGroupForm = (props: addGroupFormProps) => {
           id: key,
         };
       });
+    groupMembers.push({ id: currentUser.id });
     const body = {
       name: form.name,
       members: groupMembers,

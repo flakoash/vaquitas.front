@@ -48,7 +48,9 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
         key={"Group_Member_" + member.id.toString()}
       >
         <Image source={{ uri: member.photo as string }} style={styles.avatar} />
-        <Text style={styles.groupMemberText}> {member.name}</Text>
+        <Text style={styles.groupMemberText}>
+          {member.id === currentUser.id ? "You" : member.name}
+        </Text>
         <Input
           name={"Group_Member_" + member.id.toString()}
           style={styles.splitTextInput}
