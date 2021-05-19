@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { Image, Pressable, Text, ToastAndroid, View } from "react-native";
 import { User } from "../../types";
 import Input from "../FormComponents/Input";
@@ -41,6 +41,16 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
     },
   });
 
+  const valuesSumUp = (value: any) => {
+    const involved = members.map((member) => "Group_Member_" + member.id);
+    const realSum = formMethods.getValues("amount");
+    const values = formMethods.getValues(involved);
+    const totalSum = values.reduce(
+      (acc, value) => parseFloat(acc) + parseFloat(value)
+    );
+    return parseFloat(totalSum) === parseFloat(realSum);
+  };
+
   const split = (member: User) => {
     return (
       <View
@@ -56,7 +66,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
           style={styles.splitTextInput}
           keyboardType="numeric"
           placeholder="Amount"
-          rules={{ required: "Amount is required!" }}
+          rules={{ required: "Amount is required!", validate: valuesSumUp }}
         />
       </View>
     );
