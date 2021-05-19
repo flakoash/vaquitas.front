@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 const envVars = {
   dev: {
     backendApiUrl: "http://192.168.56.1:8080/api",
+    // backendApiUrl: "https://vaquitas.herokuapp.com/api",
   },
   prod: {
     backendApiUrl: "https://vaquitas.herokuapp.com/api",
