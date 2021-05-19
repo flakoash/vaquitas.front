@@ -27,10 +27,11 @@ const Login = () => {
     };
     fetch(`${backendApiUrl}/user/login`, requestOptions)
       .then((response) => {
+        setSuccess(response.status);
         if (response.status === 200) {
-          setSuccess(1);
           return response.json();
         }
+        // ToastAndroid.show("Error! " + response.status, ToastAndroid.SHORT);
         return "";
       })
       .then((jsonResponse) => {
@@ -76,6 +77,13 @@ const Login = () => {
             style={styles.input}
             rules={{ required: "Password is required!" }}
           />
+          {success === 403 && (
+            <Text
+              style={{ fontSize: 14, color: Colors.error, alignSelf: "center" }}
+            >
+              Wrong Username or Password!
+            </Text>
+          )}
         </View>
       </FormProvider>
       <Pressable onPress={formMethods.handleSubmit(onSubmit, onErrors)}>
@@ -93,10 +101,12 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.light.background,
   },
   form: {
     padding: 40,
     width: "100%",
+    backgroundColor: Colors.light.background,
   },
   sendButton: {
     width: 60,
@@ -105,7 +115,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 15,
     justifyContent: "center",
-    backgroundColor: Colors.success,
+    backgroundColor: Colors.dark.tint,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 1.0,
+    shadowRadius: 4,
+    elevation: 10,
   },
   input: {
     borderBottomWidth: 1,
