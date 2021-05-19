@@ -16,6 +16,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import Login from "../screens/login";
+import Register from "../screens/Register";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -72,6 +73,14 @@ function RootNavigator() {
       <Stack.Screen
         name="Group"
         component={GroupScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="Register"
+        component={Register}
         options={{
           headerShown: false,
         }}

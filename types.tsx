@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Group: undefined;
   NotFound: undefined;
   MainTab: undefined;
+  Register: undefined;
 };
 
 export type BottomTabParamList = {
