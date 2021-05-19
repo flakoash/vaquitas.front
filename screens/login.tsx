@@ -19,6 +19,10 @@ const Login = () => {
 
   const navigation = useNavigation();
 
+  const handleRedirect = (screen: string) => {
+    navigation.navigate(screen);
+  };
+
   const onSubmit = (form: any) => {
     const requestOptions = {
       method: "POST",
@@ -39,7 +43,7 @@ const Login = () => {
           formMethods.reset();
           ToastAndroid.show("Success!", ToastAndroid.SHORT);
           updateStorageUser(JSON.stringify(jsonResponse));
-          navigation.navigate("MainTab");
+          handleRedirect("MainTab");
         } else {
         }
       })
@@ -78,11 +82,7 @@ const Login = () => {
             rules={{ required: "Password is required!" }}
           />
           {success === 403 && (
-            <Text
-              style={{ fontSize: 14, color: Colors.error, alignSelf: "center" }}
-            >
-              Wrong Username or Password!
-            </Text>
+            <Text style={styles.errerMessage}>Wrong Username or Password!</Text>
           )}
         </View>
       </FormProvider>
@@ -91,6 +91,12 @@ const Login = () => {
           <SimpleLineIcons name="login" size={24} color="black" />
         </View>
       </Pressable>
+      <View style={styles.registerTest}>
+        <Text>Don't have an account yet?{"  "}</Text>
+        <Pressable onPress={() => handleRedirect("Register")}>
+          <Text style={styles.registerLink}>Sign Up</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -108,6 +114,9 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: Colors.light.background,
   },
+  errerMessage: { fontSize: 14, color: Colors.error, alignSelf: "center" },
+  registerTest: { marginTop: 30, flexDirection: "row" },
+  registerLink: { color: "blue" },
   sendButton: {
     width: 60,
     height: 55,
