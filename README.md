@@ -16,6 +16,10 @@ For running this project you will need:
 Just run:
 
 ```
+npm install
+```
+aand then
+```
 expo install
 ```
 
