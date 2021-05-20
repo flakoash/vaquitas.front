@@ -18,14 +18,22 @@ Just run:
 ```
 npm install
 ```
-aand then
+and then
 ```
 expo install
 ```
 
 ## Run App locally
 
-Just run:
+if also running the [backend](https://github.com/flakoash/vaquitas.back) locally, you must change the environment.ts file and set your local IP address:
+
+```
+dev: {
+    backendApiUrl: "{YOUR-LOCAL-IP-ADDRESS}/api",
+  },
+```
+
+And then just run:
 
 ```
 npm start
