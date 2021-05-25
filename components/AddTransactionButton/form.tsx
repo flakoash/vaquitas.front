@@ -51,7 +51,25 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
     return parseFloat(totalSum) === parseFloat(realSum);
   };
 
-  const split = (member: User) => {
+  let zip = (a1: any, a2: any) => a1.map((x: any, i) => [x, a2[i]]);
+
+  const getSplitterAmounts = () => {
+    const n = members.length;
+    const splittedAmmount =
+      Math.round((amount / n + Number.EPSILON) * 100) / 100;
+    // calculate missing decimal loss due to rounding
+    const remainder = amount - n * splittedAmmount;
+
+    let result = [];
+    // add remainder to first member of group
+    result[0] = splittedAmmount + remainder;
+    // the rest will get the rounded amount
+    for (let i = 1; i < n; i++) result[i] = splittedAmmount;
+
+    return result;
+  };
+
+  const split = (member: User, amount: number) => {
     return (
       <View
         style={styles.memberContainer}
@@ -67,15 +85,18 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
           keyboardType="numeric"
           placeholder="Amount"
           rules={{ required: "Amount is required!", validate: valuesSumUp }}
+          defaultValue={amount.toString()}
         />
       </View>
     );
   };
   const splits = () => {
+    const amounts = getSplitterAmounts();
+    const zippedMembers = zip(members, amounts);
     return (
       <View style={styles.splitContainer}>
-        {members.map((member) => {
-          return split(member);
+        {zippedMembers.map(([member, amount]) => {
+          return split(member, amount);
         })}
       </View>
     );
@@ -84,6 +105,8 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   const onSubmit = (form: any) => {
     //disable button
     setCanSend(false);
+
+    console.log(form);
 
     let involved: any[] = [];
     if (form["splitEqual"]) {
@@ -105,7 +128,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
           };
         });
     }
-
+    console.log(involved);
     const body = {
       title: form["title"],
       description: form["title"],
@@ -130,9 +153,13 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
           formMethods.reset();
           handleSuccess();
           ToastAndroid.show("Success!", ToastAndroid.SHORT);
-        } else setCanSend(true);
+        } else {
+          console.log(response.status);
+          setCanSend(true);
+        }
       })
       .catch((error) => {
+        console.log(error);
         setCanSend(true);
       });
   };
