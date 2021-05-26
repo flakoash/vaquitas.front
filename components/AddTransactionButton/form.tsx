@@ -95,7 +95,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
     const zippedMembers = zip(members, amounts);
     return (
       <View style={styles.splitContainer}>
-        {zippedMembers.map(([member, amount]) => {
+        {zippedMembers.map(([member, amount]: [User, number]) => {
           return split(member, amount);
         })}
       </View>
@@ -110,12 +110,13 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
 
     let involved: any[] = [];
     if (form["splitEqual"]) {
-      const each =
-        Math.round((amount / members.length + Number.EPSILON) * 100) / 100;
-      involved = members.map((member) => {
+      const amounts = getSplitterAmounts();
+      const zippedMembers = zip(members, amounts);
+
+      involved = zippedMembers.map(([member, amount]: [User, number]) => {
         return {
           user: { id: member.id },
-          amount: each,
+          amount: amount,
         };
       });
     } else {
