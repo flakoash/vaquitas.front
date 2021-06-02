@@ -2,15 +2,13 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-  useNavigation,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable, View } from "react-native";
+import { ColorSchemeName } from "react-native";
 import Colors from "../constants/Colors";
 import GroupScreen from "../screens/GroupScreen";
 import GroupsListScreen from "../screens/GroupsListScreen";
-import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
@@ -42,14 +40,12 @@ const Stack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator
-      // initialRouteName="MainTab"
       screenOptions={{
         headerStyle: {
           backgroundColor: Colors.light.tint,
         },
       }}
     >
-      {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
       <Stack.Screen
         name="Root"
         component={Login}
