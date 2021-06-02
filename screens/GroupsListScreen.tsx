@@ -7,10 +7,10 @@ import TotalBalance from "../components/TotalBalance";
 import Colors from "../constants/Colors";
 import { Group } from "../types";
 import ENV from "../environment";
-import useFetch from "../hooks/useFetch";
 import AddGroup from "../components/addGroup";
 import Header from "../components/Header/Header";
 import { useNavigation } from "@react-navigation/native";
+import useFetchPost from "../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
@@ -37,17 +37,26 @@ export default function TabOneScreen() {
 
   const navigation = useNavigation();
 
-  const url = `${backendApiUrl}/group`;
-
   const handleRefresh = () => {
     setUpdate(update + 1);
   };
 
-  const [groupsData, groupsStatus] = useFetch(url, update);
+  const onSuccess = (status: number, response: any) => {
+    if (status === 200) {
+      setSummary(getSummary(response));
+    }
+  };
 
+  // const [groupsData, groupsStatus] = useFetch(url, update);
+  const [groupsData, groupsStatus, getData] = useFetchPost(
+    "GET",
+    `${backendApiUrl}/group`,
+    true,
+    onSuccess
+  );
   useEffect(() => {
-    if (groupsStatus === 200) setSummary(getSummary(groupsData));
-  }, [groupsData]);
+    getData();
+  }, []);
 
   useEffect(() => {
     if (searchText !== "") {
