@@ -8,6 +8,7 @@ import CustomCheckBox from "../FormComponents/CheckBox";
 import { AntDesign } from "@expo/vector-icons";
 import useAsyncStorage from "../../hooks/useAsyncStorage";
 import ENV from "../../environment";
+import useFetchPost from "../../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
@@ -27,6 +28,21 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
   });
   const [sortedMembers, setSortedMembers] = useState(null);
 
+  const onSuccess = (status: number, response: any) => {
+    if (status === 200) {
+      formMethods.reset();
+      handleSuccess();
+      ToastAndroid.show("Success!", ToastAndroid.SHORT);
+    } else setCanSend(true);
+  };
+
+  const [addTrData, addTrStatus, SubmitTransacion] = useFetchPost(
+    "POST",
+    `${backendApiUrl}/transaction`,
+    true,
+    onSuccess
+  );
+
   // sort members so curent user is the first one
   useEffect(() => {
     if (members !== null && currentUser.id !== null) {
@@ -45,7 +61,6 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
   }, [isUserLoaded]);
 
-  const [success, setSuccess] = useState(false);
   const [canSend, setCanSend] = useState(true);
 
   const formMethods = useForm({
@@ -155,30 +170,7 @@ const AddTransactionForm = (props: AddTransaciontFormProps) => {
       involved: involved,
     };
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + currentUser.token,
-      },
-      body: JSON.stringify(body),
-    };
-    fetch(`${backendApiUrl}/transaction`, requestOptions)
-      .then((response) => {
-        if (response.status === 200) {
-          setSuccess(true);
-          formMethods.reset();
-          handleSuccess();
-          ToastAndroid.show("Success!", ToastAndroid.SHORT);
-        } else {
-          console.log(response.status);
-          setCanSend(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setCanSend(true);
-      });
+    SubmitTransacion(body);
   };
 
   const onErrors = (errors: any) => {
