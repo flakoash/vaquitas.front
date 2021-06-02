@@ -1,21 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Text, View } from "../components/Themed";
 import useAsyncStorage from "../hooks/useAsyncStorage";
-import { Group, User } from "../types";
 import ENV from "../environment";
-import { TextInput, StyleSheet, Pressable, ToastAndroid } from "react-native";
+import { StyleSheet, Pressable, ToastAndroid } from "react-native";
 import Input from "../components/FormComponents/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
+import useFetchPost from "../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
 const Login = () => {
-  const [success, setSuccess] = useState(0);
   const [user, updateStorageUser, _] = useAsyncStorage("user_id");
+  const onSuccess = (response: any) => {
+    if (loginStatus === 200) {
+      formMethods.reset();
+      ToastAndroid.show("Success!", ToastAndroid.SHORT);
+      updateStorageUser(JSON.stringify(response));
+      handleRedirect("MainTab");
+    }
+  };
+  const onError = (response: any) => {
+    console.log(response);
+  };
+  const [loginData, loginStatus, SubmitLogin] = useFetchPost(
+    `${backendApiUrl}/user/login`,
+    onSuccess,
+    onError
+  );
 
   const navigation = useNavigation();
 
@@ -24,32 +39,8 @@ const Login = () => {
   };
 
   const onSubmit = (form: any) => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    };
-    fetch(`${backendApiUrl}/user/login`, requestOptions)
-      .then((response) => {
-        setSuccess(response.status);
-        if (response.status === 200) {
-          return response.json();
-        }
-        // ToastAndroid.show("Error! " + response.status, ToastAndroid.SHORT);
-        return "";
-      })
-      .then((jsonResponse) => {
-        if (jsonResponse !== "") {
-          formMethods.reset();
-          ToastAndroid.show("Success!", ToastAndroid.SHORT);
-          updateStorageUser(JSON.stringify(jsonResponse));
-          handleRedirect("MainTab");
-        } else {
-        }
-      })
-      .catch((error) => {
-        setSuccess(-1);
-      });
+    console.log("submit");
+    SubmitLogin("POST", form);
   };
   const onErrors = (errors: any) => {
     console.warn(errors);
@@ -81,7 +72,7 @@ const Login = () => {
             style={styles.input}
             rules={{ required: "Password is required!" }}
           />
-          {success === 403 && (
+          {loginStatus === 403 && (
             <Text style={styles.errerMessage}>Wrong Username or Password!</Text>
           )}
         </View>
