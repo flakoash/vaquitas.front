@@ -31,14 +31,13 @@ const emptySummary = {
 
 export default function TabOneScreen() {
   const [summary, setSummary] = useState(emptySummary);
-  const [update, setUpdate] = useState(0);
   const [data, setData] = useState(null);
   const [searchText, setsearchText] = useState("");
 
   const navigation = useNavigation();
 
   const handleRefresh = () => {
-    setUpdate(update + 1);
+    getData();
   };
 
   const onSuccess = (status: number, response: any) => {
