@@ -1,42 +1,38 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, Pressable, ToastAndroid, View, Text } from "react-native";
 import Input from "../components/FormComponents/Input";
 import Colors from "../constants/Colors";
 import ENV from "../environment";
+import useFetchPost from "../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
 const Register = () => {
-  const [success, setSuccess] = useState(0);
   const navigation = useNavigation();
   const formMethods = useForm({
     mode: "onBlur",
   });
+
+  const onSuccess = (status: number, response: any) => {
+    if (status === 200) {
+      formMethods.reset();
+      ToastAndroid.show("Success!", ToastAndroid.SHORT);
+      handleRedirect("Root");
+    }
+  };
+
+  const [registrationData, registrationStatus, SubmitRegistration] =
+    useFetchPost("POST", `${backendApiUrl}/user/singup`, false, onSuccess);
 
   const handleRedirect = (screen: string) => {
     navigation.navigate(screen);
   };
 
   const onSubmit = (form: any) => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    };
-    fetch(`${backendApiUrl}/user/singup`, requestOptions)
-      .then((response) => {
-        console.log(response.status);
-        setSuccess(response.status);
-        formMethods.reset();
-        ToastAndroid.show("Success!", ToastAndroid.SHORT);
-        handleRedirect("Root");
-      })
-      .catch((error) => {
-        setSuccess(-1);
-      });
+    SubmitRegistration(form);
   };
   const onErrors = (errors: any) => {
     console.warn(errors);
