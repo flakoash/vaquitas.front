@@ -15,19 +15,22 @@ const { backendApiUrl } = ENV();
 
 const Login = () => {
   const [user, updateStorageUser, _] = useAsyncStorage("user_id");
-  const onSuccess = (response: any) => {
-    if (loginStatus === 200) {
+  const onSuccess = (status: number, response: any) => {
+    if (status === 200) {
+      console.log(response);
       formMethods.reset();
       ToastAndroid.show("Success!", ToastAndroid.SHORT);
       updateStorageUser(JSON.stringify(response));
       handleRedirect("MainTab");
     }
   };
-  const onError = (response: any) => {
+  const onError = (status: number, response: any) => {
     console.log(response);
   };
   const [loginData, loginStatus, SubmitLogin] = useFetchPost(
+    "POST",
     `${backendApiUrl}/user/login`,
+    false,
     onSuccess,
     onError
   );
@@ -40,7 +43,7 @@ const Login = () => {
 
   const onSubmit = (form: any) => {
     console.log("submit");
-    SubmitLogin("POST", form);
+    SubmitLogin(form);
   };
   const onErrors = (errors: any) => {
     console.warn(errors);

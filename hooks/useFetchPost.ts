@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import useAsyncStorage from "./useAsyncStorage";
 
 const useFetchPost = (
+  method: string,
   url: string,
-  onSuccess: (status: number, response: any) => void,
-  onError: (status: number, response: any) => void,
-  useToken?: false
-): [any[] | null, number, (method: string, body: any) => Promise<void>] => {
+  useToken?: boolean,
+  onSuccess?: (status: number, response: any) => void,
+  onError?: (status: number, response: any) => void
+): [any[] | null, number, (body?: any) => void] => {
   interface LooseObject {
     [key: string]: any;
   }
   const [data, setData] = useState(null);
   const [status, setStatus] = useState(0);
+  const [body, setBody] = useState(undefined);
+  const [send, setSend] = useState(false);
 
   const [storageUser, , , isUserLoaded] = useAsyncStorage("user_id");
   const [currentUser, setCurrentUser] = useState({
@@ -23,7 +26,7 @@ const useFetchPost = (
     if (isUserLoaded) setCurrentUser(JSON.parse(storageUser as string));
   }, [isUserLoaded]);
 
-  const fetchData = async (method: string, body: any) => {
+  const fetchData = async () => {
     const headers = useToken
       ? {
           "Content-Type": "application/json",
@@ -33,12 +36,18 @@ const useFetchPost = (
           "Content-Type": "application/json",
         };
 
-    const requestOptions = {
-      method: method,
-      headers: headers,
-      body: JSON.stringify(body),
-    };
-
+    const requestOptions =
+      body !== undefined
+        ? {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(body),
+          }
+        : {
+            method: method,
+            headers: headers,
+          };
+    console.log(requestOptions);
     setStatus(0);
     let statusCode = -1;
     console.log("fetching: " + url);
@@ -52,16 +61,38 @@ const useFetchPost = (
       .then(([status, responseJson]) => {
         setData(responseJson);
         setStatus(status);
-        onSuccess(status, responseJson);
+        onSuccess && onSuccess(status, responseJson);
+        setSend(false);
       })
       .catch((error) => {
         console.log(error);
         setStatus(statusCode);
-        onError(statusCode, error);
+        onError && onError(statusCode, error);
+        setSend(false);
       });
   };
 
-  return [data, status, fetchData];
+  useEffect(() => {
+    console.log(url);
+    console.log(currentUser.token);
+    console.log(send);
+    if (
+      send &&
+      url !== "" &&
+      (!useToken ||
+        (useToken &&
+          currentUser.token !== undefined &&
+          currentUser.token !== null))
+    )
+      fetchData();
+  }, [url, currentUser.token, send]);
+
+  const sendRequest = (body?: any) => {
+    setBody(body);
+    setSend(true);
+  };
+
+  return [data, status, sendRequest];
 };
 
 export default useFetchPost;
