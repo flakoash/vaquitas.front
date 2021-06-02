@@ -24,15 +24,12 @@ const Login = () => {
       handleRedirect("MainTab");
     }
   };
-  const onError = (status: number, response: any) => {
-    console.log(response);
-  };
+
   const [loginData, loginStatus, SubmitLogin] = useFetchPost(
     "POST",
     `${backendApiUrl}/user/login`,
     false,
-    onSuccess,
-    onError
+    onSuccess
   );
 
   const navigation = useNavigation();
@@ -42,7 +39,6 @@ const Login = () => {
   };
 
   const onSubmit = (form: any) => {
-    console.log("submit");
     SubmitLogin(form);
   };
   const onErrors = (errors: any) => {
