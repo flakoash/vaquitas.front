@@ -53,22 +53,23 @@ const useFetchPost = (
     console.log("fetching: " + url);
     fetch(url, requestOptions)
       .then((response) => {
+        console.log(response.status);
         statusCode = response.status;
         const data = response.json();
         //setStatus(response.status);
         return Promise.all([statusCode, data]);
       })
       .then(([status, responseJson]) => {
+        setSend(false);
         setData(responseJson);
         setStatus(status);
         onSuccess && onSuccess(status, responseJson);
-        setSend(false);
       })
       .catch((error) => {
+        setSend(false);
         console.log(error);
         setStatus(statusCode);
         onError && onError(statusCode, error);
-        setSend(false);
       });
   };
 
@@ -85,6 +86,7 @@ const useFetchPost = (
           currentUser.token !== null))
     )
       fetchData();
+    return () => {};
   }, [url, currentUser.token, send]);
 
   const sendRequest = (body?: any) => {

@@ -1,5 +1,4 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { defaultFormat } from "moment";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Pressable, Text, ToastAndroid, View } from "react-native";
@@ -10,6 +9,7 @@ import ENV from "../../environment";
 
 import * as Contacts from "expo-contacts";
 import useAsyncStorage from "../../hooks/useAsyncStorage";
+import useFetchPost from "../../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
@@ -19,8 +19,6 @@ export type addGroupFormProps = {
 
 const addGroupForm = (props: addGroupFormProps) => {
   const { handleSuccess } = props;
-  const [success, setSuccess] = useState(false);
-  const [canSend, setCanSend] = useState(true);
   const [contacts, setContacts] = useState(null);
   const [appContacts, setAppContacts] = useState(null);
   const [storageUser, ..._] = useAsyncStorage("user_id");
@@ -29,6 +27,45 @@ const addGroupForm = (props: addGroupFormProps) => {
     username: null,
     token: null,
   });
+
+  const onSuccess = (status: number, response: any) => {
+    if (status === 200) {
+      formMethods.reset();
+      handleSuccess();
+      ToastAndroid.show("Success!", ToastAndroid.SHORT);
+    }
+  };
+
+  const onVerifySuccess = (status: number, response: any) => {
+    if (status === 200) {
+      console.log(response);
+      setAppContacts(response);
+    } else {
+      ToastAndroid.show(
+        "No contacts using the app found...",
+        ToastAndroid.SHORT
+      );
+    }
+  };
+
+  const onVerifyError = (status: number, response: any) => {
+    ToastAndroid.show("No contacts using the app found...", ToastAndroid.SHORT);
+  };
+
+  const [addGroupData, addGroupStatus, SubmitGroup] = useFetchPost(
+    "POST",
+    `${backendApiUrl}/group`,
+    true,
+    onSuccess
+  );
+
+  const [vContactData, vcontactStatus, veriyContacts] = useFetchPost(
+    "POST",
+    `${backendApiUrl}/user/findByPhone`,
+    true,
+    onVerifySuccess,
+    onVerifyError
+  );
 
   const formMethods = useForm({
     mode: "onBlur",
@@ -61,34 +98,7 @@ const addGroupForm = (props: addGroupFormProps) => {
 
   const verifyContactList = () => {
     const body = contacts.map((contact) => contact.phoneNumber);
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + currentUser.token,
-      },
-      body: JSON.stringify(body),
-    };
-    console.log(requestOptions);
-    fetch(`${backendApiUrl}/user/findByPhone`, requestOptions)
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          ToastAndroid.show(
-            "No contacts using the app found...",
-            ToastAndroid.SHORT
-          );
-          return null;
-        }
-      })
-      .then((jsonResponse) => {
-        console.log(jsonResponse);
-        setAppContacts(jsonResponse);
-      })
-      .catch((error) => {
-        setCanSend(true);
-      });
+    veriyContacts(body);
   };
 
   useEffect(() => {
@@ -110,31 +120,7 @@ const addGroupForm = (props: addGroupFormProps) => {
       icon: "https://robohash.org/etautemunde.png?size=50x50&set=set1",
     };
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + currentUser.token,
-      },
-      body: JSON.stringify(body),
-    };
-    console.log(requestOptions);
-    fetch(`${backendApiUrl}/group`, requestOptions)
-      .then((response) => {
-        if (response.status === 200) {
-          setSuccess(true);
-          formMethods.reset();
-          handleSuccess();
-          ToastAndroid.show("Success!", ToastAndroid.SHORT);
-        } else {
-          console.log("error");
-          console.log(response.status);
-          setCanSend(true);
-        }
-      })
-      .catch((error) => {
-        setCanSend(true);
-      });
+    SubmitGroup(body);
   };
 
   const onErrors = (errors: any) => {
