@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlatList, View, StyleSheet, StatusBar } from "react-native";
+import { View, StyleSheet, StatusBar } from "react-native";
 import GroupTransaction from "../components/GroupTransaction";
 import TotalBalance from "../components/TotalBalance";
-import useAsyncStorage from "../hooks/useAsyncStorage";
-import { User } from "../types";
 import Colors from "../constants/Colors";
 import { Animated } from "react-native";
 import AddTransactionButton from "../components/AddTransactionButton";
 import ENV from "../environment";
-import useFetch from "../hooks/useFetch";
 import Header from "../components/Header/Header";
+import useFetchPost from "../hooks/useFetchPost";
 
 const { backendApiUrl } = ENV();
 
 const GroupScreen = () => {
   const route = useRoute();
   const { handleRefresh, id, name, members } = route.params;
-  const [refresh, setRefresh] = useState(0);
   const [searchText, setsearchText] = useState("");
 
   const [data, setData] = useState(null);
   const navigation = useNavigation();
 
-  const [transactionData, transactionStatus] = useFetch(
+  const [transactionData, transactionStatus, getData] = useFetchPost(
+    "GET",
     `${backendApiUrl}/transaction?groupId=${id}`,
-    refresh
+    true
   );
+  useEffect(() => {
+    getData();
+  }, []);
 
   const localHandleRefresh = () => {
-    setRefresh(refresh + 1);
+    getData();
   };
 
   useEffect(() => {
